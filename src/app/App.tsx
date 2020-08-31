@@ -22,7 +22,7 @@ const App: React.FC = () => {
   const [repo, setRepo] = useState(REPO)
   const [page, setPage] = useState(1)
   const [currentDisplay, setCurrentDisplay] = useState<CurrentDisplay>({
-    type: 'issues'
+    type: 'issues',
   })
 
   const setOrgAndRepo = (org: string, repo: string) => {

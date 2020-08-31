@@ -23,7 +23,7 @@ export const IssueDetailsPage = ({
   org,
   repo,
   issueId,
-  showIssuesList
+  showIssuesList,
 }: IDProps) => {
   const [issue, setIssue] = useState<Issue | null>(null)
   const [comments, setComments] = useState<Comment[]>([])

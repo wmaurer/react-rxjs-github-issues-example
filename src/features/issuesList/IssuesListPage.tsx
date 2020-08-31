@@ -19,12 +19,12 @@ export const IssuesListPage = ({
   repo,
   page = 1,
   setJumpToPage,
-  showIssueComments
+  showIssueComments,
 }: ILProps) => {
   const [issuesResult, setIssues] = useState<IssuesResult>({
     pageLinks: null,
     pageCount: 1,
-    issues: []
+    issues: [],
   })
   const [numIssues, setNumIssues] = useState<number>(-1)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -77,7 +77,7 @@ export const IssuesListPage = ({
     <IssuesList issues={issues} showIssueComments={showIssueComments} />
   )
 
-  const onPageChanged: OnPageChangeCallback = selectedItem => {
+  const onPageChanged: OnPageChangeCallback = (selectedItem) => {
     const newPage = selectedItem.selected + 1
     setJumpToPage(newPage)
   }
