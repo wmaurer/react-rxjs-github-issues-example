@@ -4,19 +4,12 @@ import {
   withLatestFrom,
   map,
   pluck,
-  filter,
   switchMap,
   switchMapTo,
   catchError,
 } from 'rxjs/operators'
 import { bind, shareLatest, SUSPENSE } from '@react-rxjs/core'
-import {
-  Issue,
-  getIssues,
-  getRepoOpenIssuesCount,
-  getIssue,
-  getComments,
-} from 'api/githubAPI'
+import { getIssues, getRepoOpenIssuesCount } from 'api/githubAPI'
 
 export const INITIAL_ORG = 'rails'
 export const INITIAL_REPO = 'rails'
@@ -31,12 +24,9 @@ export const onPageChange = (nextPage: number) => {
   pageSelected$.next(nextPage)
 }
 
-const issueSelected$ = new Subject<number | null>()
+export const issueSelected$ = new Subject<number | null>()
 export const onIssueSelected = (id: number) => {
   issueSelected$.next(id)
-}
-export const onIssueUnselecteed = () => {
-  issueSelected$.next(null)
 }
 
 export const [useCurrentRepo, currentRepo$] = bind(
@@ -88,26 +78,3 @@ currentRepoAndPage$
 export const [useSelectedIssueId, selectedIssueId$] = bind(
   issueSelected$.pipe(startWith(null))
 )
-
-export const [useIssue, issue$] = bind(
-  selectedIssueId$.pipe(
-    filter((id): id is number => id !== null),
-    withLatestFrom(currentRepo$),
-    switchMap(([id, { org, repo }]) =>
-      getIssue(org, repo, id).pipe(startWith(SUSPENSE))
-    )
-  )
-)
-
-export const [useIssueComments, issueComments$] = bind(
-  issue$.pipe(
-    filter((issue): issue is Issue => issue !== SUSPENSE),
-    switchMap((issue) =>
-      getComments(issue.comments_url).pipe(startWith(SUSPENSE))
-    )
-  )
-)
-
-selectedIssueId$
-  .pipe(switchMapTo(issueComments$.pipe(catchError(() => EMPTY))))
-  .subscribe()
